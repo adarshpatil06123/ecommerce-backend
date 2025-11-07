@@ -1,0 +1,644 @@
+{
+  "info": {
+    "name": "E-Commerce Backend API",
+    "description": "Complete API collection for E-Commerce microservices (Auth, Product, Order, Payment)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "ecommerce-backend-api",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "auth_url",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "product_url",
+      "value": "http://localhost:8082",
+      "type": "string"
+    },
+    {
+      "key": "order_url",
+      "value": "http://localhost:8083",
+      "type": "string"
+    },
+    {
+      "key": "payment_url",
+      "value": "http://localhost:8084",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "payment_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.id) {",
+                  "        pm.collectionVariables.set('user_id', jsonData.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"CUSTOMER\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/auth/register",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user in the system"
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.token) {",
+                  "        pm.collectionVariables.set('jwt_token', jsonData.data.token);",
+                  "        pm.collectionVariables.set('user_id', jsonData.data.userId);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/auth/login",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login and receive JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{auth_url}}/auth/users/{{user_id}}",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "users", "{{user_id}}"]
+            },
+            "description": "Get user details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{auth_url}}/auth/users",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "users"]
+            },
+            "description": "Get all registered users"
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{auth_url}}/auth/validate",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "validate"]
+            },
+            "description": "Validate JWT token"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product Service",
+      "item": [
+        {
+          "name": "Create Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.id) {",
+                  "        pm.collectionVariables.set('product_id', jsonData.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop\",\n  \"description\": \"High-performance gaming laptop\",\n  \"price\": 1299.99,\n  \"stock\": 50,\n  \"imageUrl\": \"https://example.com/laptop.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{product_url}}/products",
+              "host": ["{{product_url}}"],
+              "path": ["products"]
+            },
+            "description": "Create a new product"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{product_url}}/products",
+              "host": ["{{product_url}}"],
+              "path": ["products"]
+            },
+            "description": "Get all products"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{product_url}}/products/{{product_id}}",
+              "host": ["{{product_url}}"],
+              "path": ["products", "{{product_id}}"]
+            },
+            "description": "Get product by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Products by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{product_url}}/products/search?name=Laptop",
+              "host": ["{{product_url}}"],
+              "path": ["products", "search"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Laptop"
+                }
+              ]
+            },
+            "description": "Search products by name"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gaming Laptop Pro\",\n  \"description\": \"Ultra high-performance gaming laptop\",\n  \"price\": 1499.99,\n  \"stock\": 45,\n  \"imageUrl\": \"https://example.com/laptop-pro.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{product_url}}/products/{{product_id}}",
+              "host": ["{{product_url}}"],
+              "path": ["products", "{{product_id}}"]
+            },
+            "description": "Update product"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Stock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{product_url}}/products/{{product_id}}/check-stock?quantity=5",
+              "host": ["{{product_url}}"],
+              "path": ["products", "{{product_id}}", "check-stock"],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Check if product has sufficient stock"
+          },
+          "response": []
+        },
+        {
+          "name": "Reduce Stock",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{product_url}}/products/{{product_id}}/reduce-stock",
+              "host": ["{{product_url}}"],
+              "path": ["products", "{{product_id}}", "reduce-stock"]
+            },
+            "description": "Reduce product stock"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Stock",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 10\n}"
+            },
+            "url": {
+              "raw": "{{product_url}}/products/{{product_id}}/add-stock",
+              "host": ["{{product_url}}"],
+              "path": ["products", "{{product_id}}", "add-stock"]
+            },
+            "description": "Add product stock"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Product Image",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Select an image file (jpg, jpeg, png, gif, webp)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{product_url}}/products/{{product_id}}/upload-image",
+              "host": ["{{product_url}}"],
+              "path": ["products", "{{product_id}}", "upload-image"]
+            },
+            "description": "Upload product image to AWS S3"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{product_url}}/products/{{product_id}}",
+              "host": ["{{product_url}}"],
+              "path": ["products", "{{product_id}}"]
+            },
+            "description": "Delete product"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Order Service",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.id) {",
+                  "        pm.collectionVariables.set('order_id', jsonData.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{user_id}},\n  \"productId\": {{product_id}},\n  \"quantity\": 2,\n  \"shippingAddress\": \"123 Main St, Springfield, IL 62701\"\n}"
+            },
+            "url": {
+              "raw": "{{order_url}}/orders",
+              "host": ["{{order_url}}"],
+              "path": ["orders"]
+            },
+            "description": "Create a new order (calls Auth & Product services)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{order_url}}/orders/{{order_id}}",
+              "host": ["{{order_url}}"],
+              "path": ["orders", "{{order_id}}"]
+            },
+            "description": "Get order by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Orders by User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{order_url}}/orders/user/{{user_id}}",
+              "host": ["{{order_url}}"],
+              "path": ["orders", "user", "{{user_id}}"]
+            },
+            "description": "Get all orders for a user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{order_url}}/orders",
+              "host": ["{{order_url}}"],
+              "path": ["orders"]
+            },
+            "description": "Get all orders"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{order_url}}/orders/{{order_id}}/status?status=SHIPPED",
+              "host": ["{{order_url}}"],
+              "path": ["orders", "{{order_id}}", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "SHIPPED"
+                }
+              ]
+            },
+            "description": "Update order status (PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED)"
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{order_url}}/orders/{{order_id}}",
+              "host": ["{{order_url}}"],
+              "path": ["orders", "{{order_id}}"]
+            },
+            "description": "Cancel order"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment Service",
+      "item": [
+        {
+          "name": "Process Payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.id) {",
+                  "        pm.collectionVariables.set('payment_id', jsonData.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": {{order_id}},\n  \"amount\": 2599.98,\n  \"paymentMethod\": \"CREDIT_CARD\",\n  \"cardNumber\": \"4532-1234-5678-9010\"\n}"
+            },
+            "url": {
+              "raw": "{{payment_url}}/payments",
+              "host": ["{{payment_url}}"],
+              "path": ["payments"]
+            },
+            "description": "Process payment for an order (80% success rate simulation)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{payment_url}}/payments/{{payment_id}}",
+              "host": ["{{payment_url}}"],
+              "path": ["payments", "{{payment_id}}"]
+            },
+            "description": "Get payment by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment by Order ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{payment_url}}/payments/order/{{order_id}}",
+              "host": ["{{payment_url}}"],
+              "path": ["payments", "order", "{{order_id}}"]
+            },
+            "description": "Get payment by order ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{payment_url}}/payments",
+              "host": ["{{payment_url}}"],
+              "path": ["payments"]
+            },
+            "description": "Get all payments"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payments by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{payment_url}}/payments/status/SUCCESS",
+              "host": ["{{payment_url}}"],
+              "path": ["payments", "status", "SUCCESS"]
+            },
+            "description": "Get payments by status (SUCCESS, FAILED, PENDING, REFUNDED)"
+          },
+          "response": []
+        },
+        {
+          "name": "Refund Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{payment_url}}/payments/{{payment_id}}/refund",
+              "host": ["{{payment_url}}"],
+              "path": ["payments", "{{payment_id}}", "refund"]
+            },
+            "description": "Refund a successful payment"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

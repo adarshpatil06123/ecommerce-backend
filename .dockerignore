@@ -1,0 +1,18 @@
+# Global
+.git
+**/.idea
+**/.vscode
+**/*.iml
+**/*.log
+.DS_Store
+
+# Maven/Java
+**/target/
+**/.mvn/wrapper/maven-wrapper.jar
+
+# Node (if any UI folders exist)
+**/node_modules/
+
+# Docker
+docker-compose.override.yml
+**/.env.local
